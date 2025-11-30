@@ -1,6 +1,6 @@
 local Games = {
     [82321750197896] = "https://ziaanbase.github.io/games/Poop%20a%20Brainrot/main.lua",
-    [113604074601559] = "https://ziaanbase.github.io/games/Build%20a%20Beehive/main.lua",
+    [113604074601559] = "https://github.com/vexusware/vexusware.github.io/blob/main/src/games/Build%20a%20Beehive/main.lua",
     [2753915549] = "https://ziaanbase.github.io/games/Blox%20Fruit/main.lua",
     [4442272183] = "https://ziaanbase.github.io/games/Blox%20Fruit/main.lua",
     [7449423635] = "https://ziaanbase.github.io/games/Blox%20Fruit/main.lua",
