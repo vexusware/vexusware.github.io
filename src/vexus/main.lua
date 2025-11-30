@@ -11,8 +11,8 @@ local games = {
   [121271605799901] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/games/Evade/main.lua", -- evade Player Nextbots
   [10808838353] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/games/Evade/main.lua", -- evade VC Only
   [11353528705] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/games/Evade/main.lua",  -- evade Pro
-  [12334109280] = "https://ziaanbase.github.io/games/Guts%20and%20Blackpowder/main.lua", -- Guns & Black Powder
-  [14216737767] = "https://ziaanbase.github.io/games/Guts%20and%20Blackpowder/main.lua", -- Guns & Black Powder Mobile
+  [12334109280] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/games/Guts%20and%20Blackpowder/main.lua", -- Guns & Black Powder
+  [14216737767] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/games/Guts%20and%20Blackpowder/main.lua", -- Guns & Black Powder Mobile
   [93978595733734] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/games/Violence%20District/main.lua", -- Violence District 
 }
 
