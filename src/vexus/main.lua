@@ -1,7 +1,22 @@
-local Games = loadstring(game:HttpGet("https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/vexus/vexusware.lua"))()
-
-local URL = Games[game.GameId]
-
-if URL then
-  loadstring(game:HttpGet(URL))()
+local function SafeGet(url)
+    local ok, result = pcall(function()
+        return game:HttpGet(url)
+    end)
+    return ok and result or nil
 end
+
+-- Fuck
+local data = SafeGet("https://vexusware.github.io/src/vexus/vexusware.lua")
+if not data then return end
+
+local Games = loadstring(data)()
+
+-- You
+local URL = Games[game.PlaceId]
+if not URL then return end
+
+-- Skid, Your mama is Suck your dick
+local scriptContent = SafeGet(URL)
+if not scriptContent then return end
+
+loadstring(scriptContent)()
