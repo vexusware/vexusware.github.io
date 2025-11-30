@@ -1,4 +1,4 @@
-local Game = {
+local Games = {
     [82321750197896] = "https://ziaanbase.github.io/games/Poop%20a%20Brainrot/main.lua",
     [113604074601559] = "https://ziaanbase.github.io/games/Build%20a%20Beehive/main.lua",
     [2753915549] = "https://ziaanbase.github.io/games/Blox%20Fruit/main.lua",
@@ -15,4 +15,5 @@ local Game = {
     [14216737767] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/games/Guts%20and%20Blackpowder/main.lua",
     [93978595733734] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/games/Violence%20District/main.lua"
 }
-return Game
+
+return Games
