@@ -1,26 +1,60 @@
-local games = {
-    [82321750197896] = "https://raw.githubusercontent.com/vexusware/vexusware.github.io/refs/heads/main/src/notify/Poop%20a%20Brainrot/main.lua",
-    [113604074601559] = "https://github.com/vexusware/vexusware.github.io/blob/main/src/notify/Build%20a%20Beehive/main.lua",
-    [2753915549] = "https://raw.githubusercontent.com/vexusware/vexusware.github.io/refs/heads/main/src/notify/Blox%20fruit/main.lua",
-    [4442272183] = "https://raw.githubusercontent.com/vexusware/vexusware.github.io/refs/heads/main/src/notify/Blox%20fruit/main.lua",
-    [7449423635] = "https://raw.githubusercontent.com/vexusware/vexusware.github.io/refs/heads/main/src/notify/Blox%20fruit/main.lua",
-    [10324346056] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Evade/main.lua",
-    [9872472334] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Evade/main.lua",
-    [10662542523] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Evade/main.lua",
-    [10324347967] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Evade/main.lua",
-    [121271605799901] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Evade/main.lua",
-    [10808838353] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Evade/main.lua",
-    [11353528705] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Evade/main.lua",
-    [12334109280] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Guts%20and%20Blackpowder/main.lua",
-    [14216737767] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Guts%20and%20Blackpowder/main.lua",
-    [93978595733734] = "https://raw.githubusercontent.com/vexusware/vexus/refs/heads/main/src/notify/Violence%20District/main.lua",
+--// UNIVERSAL HTTP FUNCTION
+local function SafeRequest(url)
+    local response
+    
+    -- Prioritas fungsi modern
+    if request then
+        local r = request({Url = url, Method = "GET"})
+        response = r and r.Body
+    elseif http and http.request then
+        local r = http.request({Url = url, Method = "GET"})
+        response = r and r.Body
+    elseif (syn and syn.request) then
+        local r = syn.request({Url = url, Method = "GET"})
+        response = r and r.Body
+    elseif (fluxus and fluxus.request) then
+        local r = fluxus.request({Url = url, Method = "GET"})
+        response = r and r.Body
+    elseif (delta and delta.request) then
+        local r = delta.request({Url = url, Method = "GET"})
+        response = r and r.Body
 
-}
-local currentID = game.PlaceId
-local scriptURL = games[currentID]
+    -- Fallback ke HttpGet (executor lama)
+    elseif game and game.HttpGet then
+        local ok, result = pcall(function()
+            return game:HttpGet(url)
+        end)
+        response = ok and result or nil
+    end
 
-if scriptURL then
-    loadstring(game:HttpGet(scriptURL))()
-else
-    game.Players.LocalPlayer:Kick("Yo! This game ain't on the list.\nCheck the Discord for whitelisted games, homie.")
+    return response
 end
+
+-- Wrapper agar tetap aman
+local function SafeGet(url)
+    local ok, result = pcall(function()
+        return SafeRequest(url)
+    end)
+    return ok and result or nil
+end
+
+
+--// AMBIL DATABASE
+local dataURL = "https://raw.githubusercontent.com/vexusware/vexusware.github.io/refs/heads/main/src/vexus/vexusware.lua"
+local database = SafeGet(dataURL)
+if not database then return end
+
+local Games = loadstring(database)()
+if not Games then return end
+
+
+--// AMBIL URL BERDASARKAN PLACEID
+local URL = Games[game.PlaceId]
+if not URL then return end
+
+
+--// LOAD SCRIPT GAME-NYA
+local scriptData = SafeGet(URL)
+if not scriptData then return end
+
+loadstring(scriptData)()
