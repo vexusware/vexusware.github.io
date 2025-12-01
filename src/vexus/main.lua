@@ -1,4 +1,3 @@
--- Anti-duplikasi
 if _VexusExecuted then return end
 _VexusExecuted = true
 
@@ -29,11 +28,9 @@ local function FixGitHubURL(url)
     return url
 end
 
--- Ambil konfigurasi
 local config = SafeGet("https://raw.githubusercontent.com/vexusware/vexusware.github.io/main/src/vexus/vexusware.lua")
 if not config then return end
 
--- Load database games
 local Games
 local success, err = pcall(function()
     Games = loadstring(config)()
@@ -44,7 +41,6 @@ if not success or type(Games) ~= "table" then
     return
 end
 
--- Cek game saat ini
 local placeId = game.PlaceId
 local URL = Games[placeId] or Games[tostring(placeId)]
 
@@ -53,14 +49,11 @@ if not URL then
     return
 end
 
--- Perbaiki URL jika diperlukan
 URL = FixGitHubURL(URL)
 
--- Ambil script utama
 local scriptContent = SafeGet(URL)
 if not scriptContent then return end
 
--- Eksekusi script
 local success, errorMsg = pcall(function()
     loadstring(scriptContent)()
 end)
