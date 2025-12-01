@@ -30,7 +30,7 @@ local function FixGitHubURL(url)
 end
 
 -- Ambil konfigurasi
-local config = SafeGet("https://raw.githubusercontent.com/vexusware/vexusware.github.io/main/src/vexus/vexusware.lua")
+local config = SafeGet("https://raw.githubusercontent.com/vexusware/vexusware.github.io/refs/heads/main/src/vexus/notif.vexusware.lua")
 if not config then return end
 
 -- Load database games
