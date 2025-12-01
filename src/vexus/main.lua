@@ -8,7 +8,8 @@ end
 local data = SafeGet("https://raw.githubusercontent.com/vexusware/vexusware.github.io/refs/heads/main/src/vexus/vexusware.lua")
 if not data then return end
 
-local Games = loadstring(game:HttpGet("data")()
+-- Perbaikan: loadstring(data)() bukan game:HttpGet("data")()
+local Games = loadstring(data)()
 
 local URL = Games[game.PlaceId]
 if not URL then return end
@@ -16,4 +17,5 @@ if not URL then return end
 local scriptContent = SafeGet(URL)
 if not scriptContent then return end
 
-loadstring(game:HttpGet(scriptContent)()
+-- Perbaikan: loadstring(scriptContent)() bukan game:HttpGet(scriptContent)()
+loadstring(scriptContent)()
