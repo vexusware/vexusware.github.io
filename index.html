@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lua/Luau Obfuscator - Roblox</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-shield-alt"></i> Lua/Luau Obfuscator</h1>
+            <p class="subtitle">Alat pengaburan kode Lua untuk Roblox dengan proteksi maksimal</p>
+            <div class="warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Hasil obfuscasi hanya untuk keamanan tambahan. Selalu backup kode asli!</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-code"></i> Kode Lua/Luau Input</h2>
+                    <div class="actions">
+                        <button id="sampleBtn" class="btn-secondary">
+                            <i class="fas fa-vial"></i> Contoh Kode
+                        </button>
+                        <button id="clearBtn" class="btn-secondary">
+                            <i class="fas fa-broom"></i> Bersihkan
+                        </button>
+                    </div>
+                </div>
+                <textarea id="inputCode" placeholder="Tempel kode Lua/Luau Anda di sini..."></textarea>
+                <div class="upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Seret & lepas file Lua di sini atau <span id="browseLink">jelajahi file</span></p>
+                    <input type="file" id="fileInput" accept=".lua,.luau,.txt">
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <div class="settings">
+                    <h3><i class="fas fa-sliders-h"></i> Pengaturan Obfuscasi</h3>
+                    
+                    <div class="setting-group">
+                        <label for="obfLevel">
+                            <i class="fas fa-chart-line"></i> Tingkat Obfuscasi:
+                            <span id="levelValue">Tinggi</span>
+                        </label>
+                        <input type="range" id="obfLevel" min="1" max="3" value="3" step="1">
+                        <div class="level-labels">
+                            <span>Rendah</span>
+                            <span>Sedang</span>
+                            <span>Tinggi</span>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label for="varObf">
+                            <i class="fas fa-text-height"></i> Obfuscasi Variabel:
+                        </label>
+                        <select id="varObf">
+                            <option value="jawa">Aksara Jawa</option>
+                            <option value="cina">Karakter Cina</option>
+                            <option value="campur">Campuran Jawa + Cina</option>
+                            <option value="unicode">Unicode Random</option>
+                        </select>
+                    </div>
+                    
+                    <div class="checkboxes">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="antiTamper" checked>
+                            <label for="antiTamper">Anti-Tamper Protection</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="stringEncrypt" checked>
+                            <label for="stringEncrypt">Enkripsi String</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="controlFlow" checked>
+                            <label for="controlFlow">Control Flow Obfuscation</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="deadCode" checked>
+                            <label for="deadCode">Tambahkan Dead Code</label>
+                        </div>
+                    </div>
+                    
+                    <button id="obfuscateBtn" class="btn-primary">
+                        <i class="fas fa-magic"></i> Obfuscate Kode
+                    </button>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Informasi</h3>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Mengganti semua variabel dengan aksara Jawa/Cina</li>
+                        <li><i class="fas fa-check-circle"></i> Enkripsi string dan konstanta</li>
+                        <li><i class="fas fa-check-circle"></i> Tambahan kode pengacak dan anti-debug</li>
+                        <li><i class="fas fa-check-circle"></i> Kompatibel dengan Luau (Roblox Lua)</li>
+                        <li><i class="fas fa-check-circle"></i> Output siap digunakan di Roblox Studio</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-lock"></i> Kode Hasil Obfuscasi</h2>
+                    <div class="actions">
+                        <button id="copyBtn" class="btn-secondary" disabled>
+                            <i class="far fa-copy"></i> Salin
+                        </button>
+                        <button id="downloadBtn" class="btn-secondary" disabled>
+                            <i class="fas fa-download"></i> Unduh
+                        </button>
+                    </div>
+                </div>
+                <div class="output-container">
+                    <pre id="outputCode">Hasil obfuscasi akan muncul di sini...</pre>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">Baris Kode:</span>
+                        <span id="lineCount" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Variabel Diubah:</span>
+                        <span id="varCount" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Ukuran:</span>
+                        <span id="sizeCount" class="stat-value">0 KB</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Tingkat Keamanan:</span>
+                        <span id="securityLevel" class="stat-value">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Dibuat dengan <i class="fas fa-heart"></i> untuk komunitas Roblox Indonesia | 
+            Alat ini untuk edukasi dan perlindungan kode sederhana</p>
+            <p class="github-link">
+                <i class="fab fa-github"></i> 
+                <a href="https://github.com/username/lua-obfuscator" target="_blank">Lihat di GitHub</a>
+            </p>
+        </footer>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    
+    <script src="obfuscator-core.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
