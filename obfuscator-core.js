@@ -1,4 +1,4 @@
-// Engine Obfuscator Lua/Luau
+// Engine Obfuscator Lua/Luau dengan Junk Code Advanced
 class LuaObfuscator {
     constructor() {
         this.jawaChars = "ꦄꦆꦇꦈꦉꦊꦋꦌꦍꦎꦏꦐꦑꦒꦓꦔꦕꦖꦗꦘꦙꦚꦛꦜꦝꦞꦟꦠꦡꦢꦣꦤꦥꦦꦧꦨꦩꦪꦫꦬꦭꦮꦯꦰꦱꦲꦴꦵꦶꦷꦸꦹꦺꦻꦼꦽꦾꦿꦀꦁꦂꦃ꦳ꦽꦾꦿꦀ";
@@ -15,6 +15,8 @@ class LuaObfuscator {
         this.obfuscatedVars = new Map();
         this.varCounter = 0;
         this.stringEncryptionKey = null;
+        this.junkCodeCounter = 0;
+        this.junkFunctions = [];
     }
     
     // Generate random aksara Jawa
@@ -60,6 +62,253 @@ class LuaObfuscator {
         } else {
             return this.generateCinaName(2) + this.generateJawaName(4);
         }
+    }
+    
+    // Generate random math expression untuk junk code
+    generateMathExpression(complexity = 1) {
+        const operators = ['+', '-', '*', '/', '%', '^'];
+        const mathFuncs = ['math.sin', 'math.cos', 'math.tan', 'math.floor', 'math.ceil', 'math.abs', 'math.sqrt', 'math.log', 'math.exp'];
+        const vars = ['x', 'y', 'z', 'a', 'b', 'c', 't', 'n'];
+        
+        if (complexity === 1) {
+            // Simple expression
+            return `${Math.floor(Math.random() * 1000)} ${operators[Math.floor(Math.random() * operators.length)]} ${Math.floor(Math.random() * 1000)}`;
+        } else if (complexity === 2) {
+            // Medium expression with function
+            return `${mathFuncs[Math.floor(Math.random() * mathFuncs.length)]}(${Math.floor(Math.random() * 100)})`;
+        } else {
+            // Complex expression
+            const var1 = vars[Math.floor(Math.random() * vars.length)];
+            const var2 = vars[Math.floor(Math.random() * vars.length)];
+            return `(${var1} ${operators[Math.floor(Math.random() * operators.length)]} ${Math.floor(Math.random() * 100)}) ${operators[Math.floor(Math.random() * operators.length)]} (${var2} ${operators[Math.floor(Math.random() * operators.length)]} ${mathFuncs[Math.floor(Math.random() * mathFuncs.length)]}(${Math.floor(Math.random() * 50)}))`;
+        }
+    }
+    
+    // Generate random Lua table untuk junk code
+    generateRandomTable(entries = 5) {
+        let tableCode = '{';
+        for (let i = 0; i < entries; i++) {
+            const keyTypes = ['number', 'string', 'boolean', 'nil'];
+            const keyType = keyTypes[Math.floor(Math.random() * keyTypes.length)];
+            
+            let key, value;
+            switch (keyType) {
+                case 'number':
+                    key = Math.floor(Math.random() * 100);
+                    value = Math.random() > 0.5 ? `"${this.generateJawaName(3)}"` : Math.floor(Math.random() * 1000);
+                    tableCode += `[${key}] = ${value}, `;
+                    break;
+                case 'string':
+                    key = `"${this.generateCinaName(2)}${Math.floor(Math.random() * 100)}"`;
+                    value = Math.random() > 0.5 ? Math.random() > 0.5 : `function() return ${Math.floor(Math.random() * 100)} end`;
+                    tableCode += `${key} = ${value}, `;
+                    break;
+                default:
+                    tableCode += `"${this.generateUnicodeName(2)}" = ${Math.floor(Math.random() * 100)}, `;
+            }
+        }
+        tableCode += '}';
+        return tableCode;
+    }
+    
+    // Generate junk function (fungsi tidak berguna)
+    generateJunkFunction(type = 'simple') {
+        const funcName = this.generateVarName('campur');
+        this.junkFunctions.push(funcName);
+        
+        let funcCode = '';
+        const paramCount = Math.floor(Math.random() * 3) + 1;
+        const params = [];
+        
+        for (let i = 0; i < paramCount; i++) {
+            params.push(this.generateVarName('jawa'));
+        }
+        
+        funcCode += `local function ${funcName}(${params.join(', ')})\n`;
+        funcCode += `    local ${this.generateVarName('cina')} = ${Math.floor(Math.random() * 1000)}\n`;
+        
+        // Add random operations
+        const operations = Math.floor(Math.random() * 5) + 3;
+        for (let i = 0; i < operations; i++) {
+            if (Math.random() > 0.5) {
+                funcCode += `    local ${this.generateVarName('unicode')} = ${this.generateMathExpression(Math.floor(Math.random() * 3) + 1)}\n`;
+            } else {
+                funcCode += `    ${this.generateVarName('campur')} = ${this.generateVarName('campur')} or ${Math.floor(Math.random() * 100)}\n`;
+            }
+        }
+        
+        // Add conditional junk
+        if (Math.random() > 0.3) {
+            funcCode += `    if ${Math.floor(Math.random() * 100)} > ${Math.floor(Math.random() * 100)} then\n`;
+            funcCode += `        return ${Math.floor(Math.random() * 1000)}\n`;
+            funcCode += `    else\n`;
+            funcCode += `        return ${Math.floor(Math.random() * 1000)}\n`;
+            funcCode += `    end\n`;
+        } else {
+            funcCode += `    return ${params.length > 0 ? params[0] : Math.floor(Math.random() * 100)}\n`;
+        }
+        
+        funcCode += `end\n\n`;
+        return funcCode;
+    }
+    
+    // Generate junk class atau metatable
+    generateJunkClass() {
+        const className = this.generateVarName('campur');
+        let classCode = `\n-- Junk class ${className}\n`;
+        classCode += `local ${className} = {}\n`;
+        classCode += `${className}.__index = ${className}\n\n`;
+        
+        classCode += `function ${className}.new()\n`;
+        classCode += `    local self = setmetatable({}, ${className})\n`;
+        
+        // Add random properties
+        const propCount = Math.floor(Math.random() * 5) + 2;
+        for (let i = 0; i < propCount; i++) {
+            const propName = this.generateVarName('jawa');
+            classCode += `    self.${propName} = ${Math.floor(Math.random() * 1000)}\n`;
+        }
+        
+        classCode += `    return self\n`;
+        classCode += `end\n\n`;
+        
+        // Add some methods
+        const methodCount = Math.floor(Math.random() * 3) + 1;
+        for (let i = 0; i < methodCount; i++) {
+            const methodName = this.generateVarName('cina');
+            classCode += `function ${className}:${methodName}()\n`;
+            classCode += `    return ${Math.floor(Math.random() * 1000)}\n`;
+            classCode += `end\n\n`;
+        }
+        
+        return classCode;
+    }
+    
+    // Generate junk loop (loop tidak berguna)
+    generateJunkLoop() {
+        const loopTypes = ['for', 'while', 'repeat'];
+        const loopType = loopTypes[Math.floor(Math.random() * loopTypes.length)];
+        let loopCode = '';
+        
+        switch (loopType) {
+            case 'for':
+                const loopVar = this.generateVarName('jawa');
+                const start = Math.floor(Math.random() * 100);
+                const end = start + Math.floor(Math.random() * 50);
+                loopCode += `for ${loopVar} = ${start}, ${end} do\n`;
+                loopCode += `    local ${this.generateVarName('cina')} = ${loopVar} * ${Math.floor(Math.random() * 10)}\n`;
+                loopCode += `    if ${this.generateVarName('cina')} > ${Math.floor(Math.random() * 100)} then\n`;
+                loopCode += `        break\n`;
+                loopCode += `    end\n`;
+                loopCode += `end\n`;
+                break;
+                
+            case 'while':
+                loopCode += `while ${Math.floor(Math.random() * 100)} < ${Math.floor(Math.random() * 100)} do\n`;
+                loopCode += `    local ${this.generateVarName('unicode')} = ${Math.floor(Math.random() * 1000)}\n`;
+                loopCode += `    if ${Math.floor(Math.random() * 100)} == ${Math.floor(Math.random() * 100)} then\n`;
+                loopCode += `        break\n`;
+                loopCode += `    end\n`;
+                loopCode += `end\n`;
+                break;
+                
+            case 'repeat':
+                loopCode += `repeat\n`;
+                loopCode += `    local ${this.generateVarName('campur')} = ${this.generateMathExpression(2)}\n`;
+                loopCode += `    local ${this.generateVarName('jawa')} = not (${this.generateVarName('campur')} and true)\n`;
+                loopCode += `until ${Math.floor(Math.random() * 100)} > ${Math.floor(Math.random() * 100)}\n`;
+                break;
+        }
+        
+        return loopCode;
+    }
+    
+    // Tambahkan junk code berdasarkan tingkat obfuscasi
+    addJunkCode(code, level) {
+        if (level < 1) return code;
+        
+        this.junkCodeCounter = 0;
+        this.junkFunctions = [];
+        
+        const lines = code.split('\n');
+        const resultLines = [];
+        
+        // Tentukan jumlah junk berdasarkan level
+        let junkFactor;
+        switch (level) {
+            case 1: junkFactor = 0.1; break; // 10% junk
+            case 2: junkFactor = 0.3; break; // 30% junk
+            case 3: junkFactor = 0.5; break; // 50% junk
+            default: junkFactor = 0.1;
+        }
+        
+        const totalJunkItems = Math.max(3, Math.floor(lines.length * junkFactor));
+        
+        // Tambahkan junk functions di awal
+        const junkFuncCount = Math.floor(totalJunkItems * 0.3);
+        let junkHeader = '\n-- BEGIN JUNK CODE SECTION --\n';
+        for (let i = 0; i < junkFuncCount; i++) {
+            junkHeader += this.generateJunkFunction(i % 3 === 0 ? 'complex' : 'simple');
+            this.junkCodeCounter++;
+        }
+        
+        // Tambahkan junk classes
+        const junkClassCount = Math.floor(totalJunkItems * 0.2);
+        for (let i = 0; i < junkClassCount; i++) {
+            junkHeader += this.generateJunkClass();
+            this.junkCodeCounter++;
+        }
+        junkHeader += '-- END JUNK CODE SECTION --\n\n';
+        
+        // Sisipkan junk code di antara baris kode asli
+        let insertedJunk = 0;
+        const insertInterval = Math.max(2, Math.floor(lines.length / totalJunkItems));
+        
+        for (let i = 0; i < lines.length; i++) {
+            resultLines.push(lines[i]);
+            
+            // Sisipkan junk code pada interval tertentu
+            if (insertedJunk < totalJunkItems && i > 0 && i % insertInterval === 0) {
+                // Pilih jenis junk code secara acak
+                const junkType = Math.floor(Math.random() * 4);
+                
+                switch (junkType) {
+                    case 0: // Variable assignment
+                        resultLines.push(`    local ${this.generateVarName('campur')} = ${this.generateMathExpression(Math.floor(Math.random() * 3) + 1)}`);
+                        break;
+                    case 1: // Table creation
+                        resultLines.push(`    local ${this.generateVarName('jawa')} = ${this.generateRandomTable(Math.floor(Math.random() * 3) + 2)}`);
+                        break;
+                    case 2: // Function call (jika ada junk function)
+                        if (this.junkFunctions.length > 0) {
+                            const randomFunc = this.junkFunctions[Math.floor(Math.random() * this.junkFunctions.length)];
+                            resultLines.push(`    local ${this.generateVarName('cina')} = ${randomFunc}(${Math.floor(Math.random() * 100)})`);
+                        } else {
+                            resultLines.push(`    local ${this.generateVarName('unicode')} = ${Math.floor(Math.random() * 1000)}`);
+                        }
+                        break;
+                    case 3: // Loop
+                        resultLines.push('    ' + this.generateJunkLoop().replace(/\n/g, '\n    '));
+                        break;
+                }
+                
+                insertedJunk++;
+                this.junkCodeCounter++;
+            }
+        }
+        
+        // Gabungkan header junk code dengan kode utama
+        const finalCode = junkHeader + resultLines.join('\n');
+        
+        // Tambahkan junk code di akhir
+        let junkFooter = '\n\n-- FINAL JUNK CODE BLOCK --\n';
+        const finalJunkCount = Math.floor(totalJunkItems * 0.2);
+        for (let i = 0; i < finalJunkCount; i++) {
+            junkFooter += this.generateJunkLoop();
+            this.junkCodeCounter++;
+        }
+        
+        return finalCode + junkFooter;
     }
     
     // Simple string encryption (base64 dengan XOR)
@@ -181,53 +430,40 @@ end
         return { code: result, encryptedStrings };
     }
     
-    // Tambahkan dead code (kode tidak berguna)
-    addDeadCode(code, level) {
-        if (level < 2) return code;
-        
-        const deadCodeTemplates = [
-            `local ${this.generateVarName()} = function() return ${Math.floor(Math.random() * 1000)} end`,
-            `do local ${this.generateVarName()} = "${this.generateCinaName(10)}" end`,
-            `if false then ${this.generateJawaName()} = ${Math.random() * 100} end`,
-            `for ${this.generateVarName()} = 1, 0 do end`,
-            `while false do local ${this.generateVarName()} = nil end`,
-            `local ${this.generateVarName()} = nil; ${this.generateVarName()} = ${this.generateVarName()}`,
-            `local function ${this.generateVarName()}() return; end; ${this.generateVarName()}()`
-        ];
-        
-        const lines = code.split('\n');
-        const resultLines = [];
-        const insertFrequency = level === 3 ? 5 : 10;
-        
-        for (let i = 0; i < lines.length; i++) {
-            resultLines.push(lines[i]);
-            // Insert dead code setiap beberapa baris
-            if (i > 0 && i % insertFrequency === 0) {
-                const randomTemplate = deadCodeTemplates[Math.floor(Math.random() * deadCodeTemplates.length)];
-                resultLines.push(`\t-- Dead code untuk pengacakan`);
-                resultLines.push(`\t${randomTemplate}`);
-            }
-        }
-        
-        return resultLines.join('\n');
-    }
-    
     // Tambahkan anti-tamper protection
     addAntiTamper(code, level) {
         if (level < 2) return code;
         
         const tamperFunc = `
--- Anti-tamper protection
+-- Anti-tamper protection level ${level}
 local function ${this.generateVarName('cina')}()
     local ${this.generateVarName()} = tostring(script)
     local ${this.generateVarName()} = #${this.generateVarName()}
+    local ${this.generateVarName()} = tick()
+    
+    -- Check script size
     if ${this.generateVarName()} < 10 then
+        while true do end  -- Infinite loop jika script dimodifikasi
+    end
+    
+    -- Time-based check
+    if ${this.generateVarName()} < 0 then
         error("Script integrity check failed")
     end
+    
+    -- Memory check
+    local ${this.generateVarName()} = collectgarbage("count")
+    if ${this.generateVarName()} > 1000000 then
+        require(0)  -- Crash script
+    end
+    
     return true
 end
 
-${this.generateVarName('cina')}()
+-- Execute tamper check in coroutine
+spawn(function()
+    ${this.generateVarName('cina')}()
+end)
 `;
         
         return tamperFunc + '\n' + code;
@@ -237,20 +473,73 @@ ${this.generateVarName('cina')}()
     addControlFlowObfuscation(code, level) {
         if (level < 3) return code;
         
-        // Simple control flow: wrap code in meaningless conditionals
-        const wrapperStart = `
--- Control flow obfuscation
-local ${this.generateVarName()} = true
-if (${Math.random() > 0.5 ? 'not not' : '!!'} ${this.generateVarName()}) then
+        // Advanced control flow obfuscation
+        const switchVar = this.generateVarName('jawa');
+        const cases = Math.floor(Math.random() * 5) + 3;
+        
+        let switchCode = `
+-- Advanced control flow obfuscation
+local ${switchVar} = ${Math.floor(Math.random() * cases)}
+local ${this.generateVarName()} = function()
+    if ${switchVar} == 0 then
+        ${switchVar} = ${switchVar} + 1
+    end
+    
+    repeat
+        ${switchVar} = ${switchVar} - 1
+    until ${switchVar} <= 0
+end
+
+${this.generateVarName()}()
 `;
         
-        const wrapperEnd = `
+        // Wrap main code in switch-like structure
+        const wrappedCode = `
+-- Main code wrapper
+local ${this.generateVarName('cina')} = ${Math.floor(Math.random() * 100)}
+if ${this.generateVarName('cina')} ~= nil then
+    for i = 1, 10 do
+        if i % 2 == 0 then
+            ${code.replace(/\n/g, '\n            ')}
+            break
+        else
+            -- Fake branch
+            local ${this.generateVarName()} = ${Math.floor(Math.random() * 1000)}
+        end
+    end
 else
-    local ${this.generateVarName()} = nil
+    -- Dead branch
+    while false do
+        print("This never executes")
+    end
 end
 `;
         
-        return wrapperStart + code + wrapperEnd;
+        return switchCode + '\n' + wrappedCode;
+    }
+    
+    // Tambahkan fake error handling
+    addFakeErrorHandling(code) {
+        const errorFunc = `
+-- Fake error handling system
+local ${this.generateVarName('campur')} = function()
+    local success, err = pcall(function()
+        -- Fake error
+        error("Fake error for obfuscation", 0)
+    end)
+    
+    if not success then
+        -- Do nothing, just consume the error
+        local ${this.generateVarName()} = tostring(err)
+    end
+    
+    return true
+end
+
+${this.generateVarName('campur')}()
+`;
+        
+        return errorFunc + '\n' + code;
     }
     
     // Main obfuscation function
@@ -261,13 +550,16 @@ end
             antiTamper = true,
             stringEncrypt = true,
             controlFlow = true,
-            deadCode = true
+            deadCode = true,
+            junkCode = true
         } = options;
         
         console.log(`Starting obfuscation with level: ${obfLevel}`);
         
         // Reset counter
         this.varCounter = 0;
+        this.junkCodeCounter = 0;
+        this.junkFunctions = [];
         
         // Step 1: Replace variables
         console.log("Step 1: Replacing variables...");
@@ -295,10 +587,10 @@ end
             obfuscated = stringVars + '\n' + obfuscated;
         }
         
-        // Step 4: Add dead code
-        if (deadCode) {
-            console.log("Step 4: Adding dead code...");
-            obfuscated = this.addDeadCode(obfuscated, obfLevel);
+        // Step 4: Add junk code
+        if (junkCode) {
+            console.log(`Step 4: Adding junk code (level: ${obfLevel})...`);
+            obfuscated = this.addJunkCode(obfuscated, obfLevel);
         }
         
         // Step 5: Add control flow obfuscation
@@ -313,29 +605,40 @@ end
             obfuscated = this.addAntiTamper(obfuscated, obfLevel);
         }
         
-        // Step 7: Add header comment
+        // Step 7: Add fake error handling
+        if (obfLevel > 1) {
+            console.log("Step 7: Adding fake error handling...");
+            obfuscated = this.addFakeErrorHandling(obfuscated);
+        }
+        
+        // Step 8: Add header comment
         const header = `--[[
-    Lua/Luau Obfuscator
-    Obfuscated with Roblox Lua Obfuscator v2.0
+    Lua/Luau Advanced Obfuscator v3.0
+    Obfuscated with Roblox Lua Obfuscator
     Security Level: ${obfLevel === 1 ? 'Low' : obfLevel === 2 ? 'Medium' : 'High'}
     Variables Obfuscated: ${varCount}
     Strings Encrypted: ${encryptedStrings.length}
+    Junk Code Added: ${this.junkCodeCounter} items
+    Protection: ${antiTamper ? 'Anti-Tamper ✓' : ''} ${controlFlow ? 'Control Flow ✓' : ''} ${stringEncrypt ? 'String Encrypt ✓' : ''}
     Timestamp: ${new Date().toLocaleString()}
+    WARNING: Do not attempt to deobfuscate!
 --]]
 
 `;
         
         obfuscated = header + obfuscated;
         
-        console.log("Obfuscation complete!");
+        console.log(`Obfuscation complete! Added ${this.junkCodeCounter} junk code items.`);
         
         return {
             code: obfuscated,
             stats: {
                 variablesObfuscated: varCount,
                 stringsEncrypted: encryptedStrings.length,
+                junkCodeAdded: this.junkCodeCounter,
                 originalLength: code.length,
                 obfuscatedLength: obfuscated.length,
+                junkPercentage: ((this.junkCodeCounter / (code.split('\n').length + this.junkCodeCounter)) * 100).toFixed(1),
                 securityLevel: obfLevel
             }
         };
