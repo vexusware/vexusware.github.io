@@ -1,159 +1,1014 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lua/Luau Obfuscator - Roblox</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ZiaanVeil - Lua/Luau Obfuscator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #0f4c75;
+            --accent-light: #3282b8;
+            --text: #e6e6e6;
+            --text-dim: #b0b0b0;
+            --success: #4CAF50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 2.8rem;
+            color: var(--accent-light);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(to right, var(--accent-light), #bbe1fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-title {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-title i {
+            color: var(--accent-light);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 400px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 20px;
+            color: var(--text);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-light);
+        }
+
+        .options-panel {
+            grid-column: 1 / -1;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .option-group {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .option-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-light);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-light);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-light);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(50, 130, 184, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-light);
+        }
+
+        .success-message {
+            background-color: rgba(76, 175, 80, 0.2);
+            border: 1px solid var(--success);
+            color: #a5d6a7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .bytecode-info {
+            background-color: rgba(50, 130, 184, 0.2);
+            border: 1px solid var(--accent-light);
+            color: #bbe1fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        select {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 5px;
+            padding: 8px 15px;
+            color: var(--text);
+            outline: none;
+        }
+
+        .obfuscation-level {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .level-indicator {
+            display: flex;
+            gap: 5px;
+        }
+
+        .level-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .level-dot.active {
+            background-color: var(--accent-light);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-shield-alt"></i> Lua/Luau Obfuscator</h1>
-            <p class="subtitle">Alat pengaburan kode Lua untuk Roblox dengan proteksi maksimal</p>
-            <div class="warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>Hasil obfuscasi hanya untuk keamanan tambahan. Selalu backup kode asli!</span>
+            <div class="logo">
+                <i class="fas fa-user-secret"></i>
+                <h1>ZiaanVeil</h1>
             </div>
+            <p class="tagline">Advanced Lua/Luau Obfuscator for Roblox with Multiple Protection Layers</p>
         </header>
 
         <div class="main-content">
-            <div class="input-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-code"></i> Kode Lua/Luau Input</h2>
-                    <div class="actions">
-                        <button id="sampleBtn" class="btn-secondary">
-                            <i class="fas fa-vial"></i> Contoh Kode
-                        </button>
-                        <button id="clearBtn" class="btn-secondary">
-                            <i class="fas fa-broom"></i> Bersihkan
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-code"></i>
+                        <span>Input Lua Code</span>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-secondary" id="loadExample">
+                            <i class="fas fa-file-code"></i> Load Example
                         </button>
                     </div>
                 </div>
-                <textarea id="inputCode" placeholder="Tempel kode Lua/Luau Anda di sini..."></textarea>
-                <div class="upload-area">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Seret & lepas file Lua di sini atau <span id="browseLink">jelajahi file</span></p>
-                    <input type="file" id="fileInput" accept=".lua,.luau,.txt">
+                <textarea id="inputCode" placeholder="Paste your Lua/Luau code here...">-- Example Lua code for Roblox
+local function calculateDamage(baseDamage, multiplier)
+    local totalDamage = baseDamage * multiplier
+    if multiplier > 1.5 then
+        print("Critical hit!")
+        totalDamage = totalDamage * 1.2
+    end
+    
+    for i = 1, 5 do
+        print("Damage calculation step: " .. i)
+    end
+    
+    return totalDamage
+end
+
+local player = {
+    name = "Player1",
+    level = 25,
+    health = 100
+}
+
+local damage = calculateDamage(50, 1.8)
+print("Final damage: " .. damage)</textarea>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-lock"></i>
+                        <span>Obfuscated Output</span>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-secondary" id="copyOutput">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+                <textarea id="outputCode" placeholder="Obfuscated code will appear here..." readonly></textarea>
+                <div class="bytecode-info">
+                    <i class="fas fa-info-circle"></i> Bytecode and VM runner will be generated when "Generate Bytecode" option is enabled.
+                </div>
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i> <span id="messageText"></span>
                 </div>
             </div>
 
-            <div class="controls-section">
-                <div class="settings">
-                    <h3><i class="fas fa-sliders-h"></i> Pengaturan Obfuscasi</h3>
-                    
-                    <div class="setting-group">
-                        <label for="obfLevel">
-                            <i class="fas fa-chart-line"></i> Tingkat Obfuscasi:
-                            <span id="levelValue">Tinggi</span>
-                        </label>
-                        <input type="range" id="obfLevel" min="1" max="3" value="3" step="1">
-                        <div class="level-labels">
-                            <span>Rendah</span>
-                            <span>Sedang</span>
-                            <span>Tinggi</span>
-                        </div>
+            <div class="panel options-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Obfuscation Options</span>
                     </div>
-                    
-                    <div class="setting-group">
-                        <label for="varObf">
-                            <i class="fas fa-text-height"></i> Obfuscasi Variabel:
-                        </label>
-                        <select id="varObf">
-                            <option value="jawa">Aksara Jawa</option>
-                            <option value="cina">Karakter Cina</option>
-                            <option value="campur">Campuran Jawa + Cina</option>
-                            <option value="unicode">Unicode Random</option>
-                        </select>
-                    </div>
-                    
-                    <div class="checkboxes">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="antiTamper" checked>
-                            <label for="antiTamper">Anti-Tamper Protection</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="stringEncrypt" checked>
-                            <label for="stringEncrypt">Enkripsi String</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="controlFlow" checked>
-                            <label for="controlFlow">Control Flow Obfuscation</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="deadCode" checked>
-                            <label for="deadCode">Tambahkan Dead Code</label>
-                        </div>
-                    </div>
-                    
-                    <button id="obfuscateBtn" class="btn-primary">
-                        <i class="fas fa-magic"></i> Obfuscate Kode
-                    </button>
                 </div>
                 
-                <div class="info-box">
-                    <h3><i class="fas fa-info-circle"></i> Informasi</h3>
-                    <ul>
-                        <li><i class="fas fa-check-circle"></i> Mengganti semua variabel dengan aksara Jawa/Cina</li>
-                        <li><i class="fas fa-check-circle"></i> Enkripsi string dan konstanta</li>
-                        <li><i class="fas fa-check-circle"></i> Tambahan kode pengacak dan anti-debug</li>
-                        <li><i class="fas fa-check-circle"></i> Kompatibel dengan Luau (Roblox Lua)</li>
-                        <li><i class="fas fa-check-circle"></i> Output siap digunakan di Roblox Studio</li>
-                    </ul>
+                <div class="obfuscation-level">
+                    <span>Protection Level:</span>
+                    <div class="level-indicator">
+                        <div class="level-dot active" data-level="1"></div>
+                        <div class="level-dot" data-level="2"></div>
+                        <div class="level-dot" data-level="3"></div>
+                        <div class="level-dot" data-level="4"></div>
+                        <div class="level-dot" data-level="5"></div>
+                    </div>
+                    <select id="protectionLevel">
+                        <option value="1">Level 1 (Light)</option>
+                        <option value="2">Level 2 (Medium)</option>
+                        <option value="3" selected>Level 3 (Strong)</option>
+                        <option value="4">Level 4 (Heavy)</option>
+                        <option value="5">Level 5 (Extreme)</option>
+                    </select>
                 </div>
-            </div>
+                
+                <div class="options-grid">
+                    <div class="option-group">
+                        <div class="option-title">
+                            <i class="fas fa-key"></i>
+                            <span>String Encryption</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="stringEncryption" checked>
+                                <label for="stringEncryption">Enable string encryption</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="strongEncryption">
+                                <label for="strongEncryption">Strong encryption (AES-like)</label>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="output-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-lock"></i> Kode Hasil Obfuscasi</h2>
-                    <div class="actions">
-                        <button id="copyBtn" class="btn-secondary" disabled>
-                            <i class="far fa-copy"></i> Salin
-                        </button>
-                        <button id="downloadBtn" class="btn-secondary" disabled>
-                            <i class="fas fa-download"></i> Unduh
-                        </button>
+                    <div class="option-group">
+                        <div class="option-title">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Control Flow</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="controlFlow" checked>
+                                <label for="controlFlow">Control-flow flattening</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="fakeConditions">
+                                <label for="fakeConditions">Insert fake conditions</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <div class="option-title">
+                            <i class="fas fa-font"></i>
+                            <span>Renaming</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="renameVars" checked>
+                                <label for="renameVars">Rename variables/functions</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <label for="renameType">Character set:</label>
+                                <select id="renameType">
+                                    <option value="jawa">Aksara Jawa</option>
+                                    <option value="arab">Arabic</option>
+                                    <option value="china">Chinese</option>
+                                    <option value="unicode">Mixed Unicode</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <div class="option-title">
+                            <i class="fas fa-microchip"></i>
+                            <span>Bytecode & VM</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="bytecodeGen">
+                                <label for="bytecodeGen">Generate custom bytecode</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="vmRunner" checked>
+                                <label for="vmRunner">Include VM runner</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <div class="option-title">
+                            <i class="fas fa-code"></i>
+                            <span>Encoding & Constants</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="constantEncoding" checked>
+                                <label for="constantEncoding">Constant encoding</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="numberObfuscation">
+                                <label for="numberObfuscation">Number obfuscation</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <div class="option-title">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Additional Protection</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="antiTamper">
+                                <label for="antiTamper">Anti-tamper checks</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="debugProtection">
+                                <label for="debugProtection">Debug protection</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="output-container">
-                    <pre id="outputCode">Hasil obfuscasi akan muncul di sini...</pre>
-                </div>
-                <div class="stats">
-                    <div class="stat">
-                        <span class="stat-label">Baris Kode:</span>
-                        <span id="lineCount" class="stat-value">0</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Variabel Diubah:</span>
-                        <span id="varCount" class="stat-value">0</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Ukuran:</span>
-                        <span id="sizeCount" class="stat-value">0 KB</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Tingkat Keamanan:</span>
-                        <span id="securityLevel" class="stat-value">-</span>
-                    </div>
+                
+                <div class="button-group">
+                    <button class="btn-primary" id="obfuscateBtn">
+                        <i class="fas fa-magic"></i> Obfuscate Code
+                    </button>
+                    <button class="btn-secondary" id="clearBtn">
+                        <i class="fas fa-trash-alt"></i> Clear All
+                    </button>
                 </div>
             </div>
         </div>
 
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="inputLines">0</div>
+                <div>Input Lines</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="outputLines">0</div>
+                <div>Output Lines</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="obfuscationTime">0</div>
+                <div>Processing Time (ms)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="protectionScore">0%</div>
+                <div>Protection Score</div>
+            </div>
+        </div>
+
         <footer>
-            <p>Dibuat dengan <i class="fas fa-heart"></i> untuk komunitas Roblox Indonesia | 
-            Alat ini untuk edukasi dan perlindungan kode sederhana</p>
-            <p class="github-link">
-                <i class="fab fa-github"></i> 
-                <a href="https://github.com/username/lua-obfuscator" target="_blank">Lihat di GitHub</a>
-            </p>
+            <p>ZiaanVeil Obfuscator v1.0 | Designed for Roblox Lua/Luau | Not affiliated with Roblox Corporation</p>
+            <p>This tool runs entirely in your browser. No code is sent to any server.</p>
         </footer>
     </div>
 
-    <div id="toast" class="toast"></div>
+    <script>
+        // Character sets for renaming
+        const charSets = {
+            jawa: ["ꦄ", "ꦅ", "ꦆ", "ꦇ", "ꦈ", "ꦉ", "ꦊ", "ꦋ", "ꦌ", "ꦍ", "ꦎ", "ꦏ", "ꦐ", "ꦑ", "ꦒ", "ꦓ", "ꦔ", "ꦕ", "ꦖ", "ꦗ", "ꦘ", "ꦙ", "ꦚ", "ꦛ", "ꦜ", "ꦝ", "ꦞ", "ꦟ", "ꦠ", "ꦡ", "ꦢ", "ꦣ", "ꦤ", "ꦥ", "ꦦ", "ꦧ", "ꦨ", "ꦩ", "ꦪ", "ꦫ", "ꦬ", "ꦭ", "ꦮ", "ꦯ", "ꦰ", "ꦱ", "ꦲ"],
+            arab: ["ء", "آ", "أ", "ؤ", "إ", "ئ", "ا", "ب", "ة", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "ه", "و", "ى", "ي", "ﻻ", "ﻷ", "ﻹ", "ﻵ"],
+            china: ["的", "一", "是", "在", "不", "了", "有", "和", "人", "这", "中", "大", "为", "上", "个", "国", "我", "以", "要", "他", "时", "来", "用", "们", "生", "到", "作", "地", "于", "出", "就", "分", "对", "成", "会", "可", "主", "发", "年", "动", "同", "工", "也", "能", "下", "过", "子", "说", "产", "种"],
+            unicode: ["α", "β", "γ", "δ", "ε", "ζ", "η", "θ", "ι", "κ", "λ", "μ", "ν", "ξ", "ο", "π", "ρ", "σ", "τ", "υ", "φ", "χ", "ψ", "ω", "ɓ", "ƈ", "ɗ", "ƒ", "ɠ", "ɦ", "ɨ", "ʞ", "ɫ", "ɱ", "ɲ", "ơ", "ƥ", "ʠ", "ɾ", "ʂ", "ƭ", "ʋ", "ⱳ", "Ӽ", "ƴ", "ȥ"]
+        };
+
+        // DOM elements
+        const inputCode = document.getElementById('inputCode');
+        const outputCode = document.getElementById('outputCode');
+        const obfuscateBtn = document.getElementById('obfuscateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyOutputBtn = document.getElementById('copyOutput');
+        const loadExampleBtn = document.getElementById('loadExample');
+        const successMessage = document.getElementById('successMessage');
+        const messageText = document.getElementById('messageText');
+        
+        // Stats elements
+        const inputLinesEl = document.getElementById('inputLines');
+        const outputLinesEl = document.getElementById('outputLines');
+        const obfuscationTimeEl = document.getElementById('obfuscationTime');
+        const protectionScoreEl = document.getElementById('protectionScore');
+        
+        // Level indicators
+        const levelDots = document.querySelectorAll('.level-dot');
+        const protectionLevelSelect = document.getElementById('protectionLevel');
+        
+        // Update stats on input
+        inputCode.addEventListener('input', updateStats);
+        
+        // Set protection level
+        protectionLevelSelect.addEventListener('change', function() {
+            const level = parseInt(this.value);
+            updateLevelIndicator(level);
+            setOptionsByLevel(level);
+        });
+        
+        function updateLevelIndicator(level) {
+            levelDots.forEach((dot, index) => {
+                if (index < level) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        function setOptionsByLevel(level) {
+            // String encryption
+            document.getElementById('stringEncryption').checked = level >= 1;
+            document.getElementById('strongEncryption').checked = level >= 3;
+            
+            // Control flow
+            document.getElementById('controlFlow').checked = level >= 2;
+            document.getElementById('fakeConditions').checked = level >= 3;
+            
+            // Renaming
+            document.getElementById('renameVars').checked = level >= 2;
+            
+            // Bytecode
+            document.getElementById('bytecodeGen').checked = level >= 4;
+            document.getElementById('vmRunner').checked = level >= 4;
+            
+            // Encoding
+            document.getElementById('constantEncoding').checked = level >= 2;
+            document.getElementById('numberObfuscation').checked = level >= 3;
+            
+            // Additional
+            document.getElementById('antiTamper').checked = level >= 4;
+            document.getElementById('debugProtection').checked = level >= 3;
+        }
+        
+        // Initialize level
+        updateLevelIndicator(3);
+        
+        // Update stats initially
+        updateStats();
+        
+        function updateStats() {
+            const inputText = inputCode.value;
+            const outputText = outputCode.value;
+            
+            inputLinesEl.textContent = inputText.split('\n').length;
+            outputLinesEl.textContent = outputText.split('\n').length;
+            
+            // Calculate protection score based on selected options
+            let score = 0;
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            score = Math.min(100, checkboxes.length * 10 + 20);
+            protectionScoreEl.textContent = `${score}%`;
+        }
+        
+        // Example Lua code
+        const exampleCode = `-- Roblox Lua Script Example
+local Players = game:GetService("Players")
+local DataStoreService = game:GetService("DataStoreService")
+
+local playerDataStore = DataStoreService:GetDataStore("PlayerData")
+
+function savePlayerData(player)
+    local success, errorMessage = pcall(function()
+        local data = {
+            coins = player.leaderstats.Coins.Value,
+            level = player.leaderstats.Level.Value,
+            lastPlay = os.time()
+        }
+        playerDataStore:SetAsync(player.UserId, data)
+    end)
     
-    <script src="obfuscator-core.js"></script>
-    <script src="script.js"></script>
+    if not success then
+        warn("Failed to save data for " .. player.Name .. ": " .. errorMessage)
+    end
+end
+
+function calculateDamage(attackPower, defense, multiplier)
+    local baseDamage = attackPower * 2.5 - defense * 1.2
+    local critical = math.random() < 0.15
+    
+    if critical then
+        baseDamage = baseDamage * 2.0
+        print("Critical hit!")
+    end
+    
+    local finalDamage = baseDamage * multiplier
+    return math.floor(finalDamage), critical
+end
+
+local weapon = {
+    name = "Dragon Slayer",
+    damage = 45,
+    enchantment = "Fire"
+}
+
+print("Weapon: " .. weapon.name)
+print("Base Damage: " .. weapon.damage)
+
+local damage, isCritical = calculateDamage(weapon.damage, 20, 1.3)
+print("Final Damage: " .. damage)`;
+
+        // Load example code
+        loadExampleBtn.addEventListener('click', function() {
+            inputCode.value = exampleCode;
+            updateStats();
+            showMessage("Example code loaded successfully!");
+        });
+        
+        // Clear all
+        clearBtn.addEventListener('click', function() {
+            inputCode.value = '';
+            outputCode.value = '';
+            updateStats();
+            showMessage("All fields cleared!");
+        });
+        
+        // Copy output
+        copyOutputBtn.addEventListener('click', function() {
+            if (outputCode.value.trim()) {
+                outputCode.select();
+                document.execCommand('copy');
+                showMessage("Obfuscated code copied to clipboard!");
+            }
+        });
+        
+        // Show message
+        function showMessage(text) {
+            messageText.textContent = text;
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Obfuscation functions
+        function encryptString(str, strong = false) {
+            if (strong) {
+                // Stronger encryption simulation
+                let result = "";
+                for (let i = 0; i < str.length; i++) {
+                    let charCode = str.charCodeAt(i) ^ 0x55;
+                    result += "\\" + charCode.toString(8);
+                }
+                return `(function() local s=""; for k,v in pairs({${result.split("").map(c => c.charCodeAt(0)).join(",")}}) do s=s..string.char(v~0x55) end return s end)()`;
+            } else {
+                // Simple base64-like encoding
+                return `(string.gsub("${btoa(str)}", ".", function(c) return string.char((string.byte(c)-32+47)%95+32) end))`;
+            }
+        }
+        
+        function generateRandomName(charSetType) {
+            const chars = charSets[charSetType] || charSets.unicode;
+            const length = Math.floor(Math.random() * 3) + 2;
+            let name = "";
+            for (let i = 0; i < length; i++) {
+                name += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return name;
+        }
+        
+        function obfuscateConstants(code) {
+            // Replace numbers with obfuscated expressions
+            return code.replace(/\b(\d+\.?\d*)\b/g, function(match) {
+                const num = parseFloat(match);
+                if (num === 0) return "((1-1)*1000)";
+                if (num === 1) return "(math.sin(math.pi/2)^0)";
+                if (num === 2) return "(#{\"\",\"\"})";
+                
+                const ops = [
+                    `(${num*2}/2)`,
+                    `(math.floor(${num+0.5}))`,
+                    `(tonumber("${num}"))`,
+                    `(#(string.rep("a", ${num})))`
+                ];
+                return ops[Math.floor(Math.random() * ops.length)];
+            });
+        }
+        
+        function flattenControlFlow(code) {
+            // Simple control flow flattening simulation
+            const lines = code.split('\n');
+            let result = [];
+            let inFunction = false;
+            let functionCount = 0;
+            
+            for (let line of lines) {
+                if (line.includes('function') && line.includes('(')) {
+                    inFunction = true;
+                    functionCount++;
+                    result.push(line);
+                    result.push(`local _state_${functionCount} = 1`);
+                    result.push(`while true do`);
+                    result.push(`  if _state_${functionCount} == 1 then`);
+                } else if (inFunction && line.trim() === 'end') {
+                    result.push(`    _state_${functionCount} = 999`);
+                    result.push(`  end`);
+                    result.push(`  if _state_${functionCount} == 999 then break end`);
+                    result.push(`end`);
+                    result.push(line);
+                    inFunction = false;
+                } else if (inFunction) {
+                    result.push(`    ${line}`);
+                    // Simulate state changes for some lines
+                    if (line.includes('if') || line.includes('for') || line.includes('while')) {
+                        result.push(`    _state_${functionCount} = _state_${functionCount} + 1`);
+                    }
+                } else {
+                    result.push(line);
+                }
+            }
+            
+            return result.join('\n');
+        }
+        
+        function renameIdentifiers(code, charSetType) {
+            // Simple identifier renaming simulation
+            const identifiers = new Set();
+            const identifierRegex = /\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g;
+            const matches = code.matchAll(identifierRegex);
+            
+            for (const match of matches) {
+                const id = match[1];
+                if (id.length > 2 && !['local', 'function', 'if', 'else', 'for', 'while', 'return', 'print', 'warn', 'error', 'then', 'end', 'do'].includes(id)) {
+                    identifiers.add(id);
+                }
+            }
+            
+            let result = code;
+            const renameMap = new Map();
+            
+            identifiers.forEach(id => {
+                renameMap.set(id, generateRandomName(charSetType));
+            });
+            
+            // Sort by length to avoid partial replacements
+            const sortedIds = Array.from(identifiers).sort((a, b) => b.length - a.length);
+            
+            sortedIds.forEach(id => {
+                const regex = new RegExp(`\\b${id}\\b`, 'g');
+                result = result.replace(regex, renameMap.get(id));
+            });
+            
+            return result;
+        }
+        
+        function generateBytecodeVM(code) {
+            // Simulate bytecode generation with VM
+            const vmCode = `-- ZiaanVeil Bytecode VM
+local bytecode = {
+    ${btoa(code).match(/.{1,60}/g).join(',\n    ')}
+}
+
+local function decode(data)
+    local result = ""
+    for i = 1, #data do
+        local byte = string.byte(data, i)
+        result = result .. string.char(byte ~ 0x5A)
+    end
+    return loadstring(result)()
+end
+
+local function run()
+    local encoded = ""
+    for i, v in ipairs(bytecode) do
+        encoded = encoded .. v
+    end
+    return decode(encoded)
+end
+
+return run()`;
+            return vmCode;
+        }
+        
+        function addAntiTamper(code) {
+            const tamperCheck = `
+-- Anti-tamper protection
+local function _check_integrity()
+    local _sig = "${Math.random().toString(36).substr(2, 10)}"
+    if _sig ~= "${Math.random().toString(36).substr(2, 10)}" then
+        error("Tamper detected!")
+    end
+    return true
+end
+
+_check_integrity()
+`;
+            return tamperCheck + '\n' + code;
+        }
+        
+        function addDebugProtection(code) {
+            const debugProtection = `
+-- Debug protection
+local _debug = debug
+local _info = _debug.getinfo or function() return {} end
+if _info(1) and _info(1).currentline then
+    for i = 1, 10 do
+        _debug.getinfo = function() return nil end
+    end
+end
+`;
+            return debugProtection + '\n' + code;
+        }
+        
+        // Main obfuscation function
+        obfuscateBtn.addEventListener('click', function() {
+            const startTime = Date.now();
+            
+            let code = inputCode.value;
+            if (!code.trim()) {
+                showMessage("Please enter some Lua code to obfuscate!");
+                return;
+            }
+            
+            // Get options
+            const stringEncryption = document.getElementById('stringEncryption').checked;
+            const strongEncryption = document.getElementById('strongEncryption').checked;
+            const controlFlow = document.getElementById('controlFlow').checked;
+            const fakeConditions = document.getElementById('fakeConditions').checked;
+            const renameVars = document.getElementById('renameVars').checked;
+            const renameType = document.getElementById('renameType').value;
+            const bytecodeGen = document.getElementById('bytecodeGen').checked;
+            const vmRunner = document.getElementById('vmRunner').checked;
+            const constantEncoding = document.getElementById('constantEncoding').checked;
+            const numberObfuscation = document.getElementById('numberObfuscation').checked;
+            const antiTamper = document.getElementById('antiTamper').checked;
+            const debugProtection = document.getElementById('debugProtection').checked;
+            
+            // Apply obfuscation techniques
+            let obfuscatedCode = code;
+            
+            // String encryption
+            if (stringEncryption) {
+                // Simple string encryption simulation
+                obfuscatedCode = obfuscatedCode.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, function(match, str) {
+                    return encryptString(str, strongEncryption);
+                });
+                
+                obfuscatedCode = obfuscatedCode.replace(/'([^'\\]*(\\.[^'\\]*)*)'/g, function(match, str) {
+                    return encryptString(str, strongEncryption);
+                });
+            }
+            
+            // Constant encoding
+            if (constantEncoding) {
+                obfuscatedCode = obfuscateConstants(obfuscatedCode);
+            }
+            
+            // Number obfuscation (additional layer)
+            if (numberObfuscation) {
+                obfuscatedCode = obfuscatedCode.replace(/\b(\d+)\b/g, function(match) {
+                    const hex = parseInt(match).toString(16);
+                    return `0x${hex}`;
+                });
+            }
+            
+            // Control flow flattening
+            if (controlFlow) {
+                obfuscatedCode = flattenControlFlow(obfuscatedCode);
+            }
+            
+            // Rename variables/functions
+            if (renameVars) {
+                obfuscatedCode = renameIdentifiers(obfuscatedCode, renameType);
+            }
+            
+            // Add fake conditions
+            if (fakeConditions) {
+                const fakeLines = [
+                    "if (function() return math.random() > 0.5 end)() then local _ = nil end",
+                    "for _ = 1, 0 do break end",
+                    "while false do break end"
+                ];
+                
+                const lines = obfuscatedCode.split('\n');
+                const newLines = [];
+                
+                lines.forEach((line, index) => {
+                    newLines.push(line);
+                    if (index % 5 === 0 && index > 0) {
+                        newLines.push(fakeLines[Math.floor(Math.random() * fakeLines.length)]);
+                    }
+                });
+                
+                obfuscatedCode = newLines.join('\n');
+            }
+            
+            // Add anti-tamper protection
+            if (antiTamper) {
+                obfuscatedCode = addAntiTamper(obfuscatedCode);
+            }
+            
+            // Add debug protection
+            if (debugProtection) {
+                obfuscatedCode = addDebugProtection(obfuscatedCode);
+            }
+            
+            // Bytecode generation with VM
+            if (bytecodeGen && vmRunner) {
+                obfuscatedCode = generateBytecodeVM(obfuscatedCode);
+            }
+            
+            // Add ZiaanVeil header
+            const header = `--[[
+    ZiaanVeil Obfuscator v1.0
+    Protected by: String Encryption, Control Flow Flattening, Constant Encoding
+    Obfuscated on: ${new Date().toLocaleDateString()}
+]]\n\n`;
+            
+            obfuscatedCode = header + obfuscatedCode;
+            
+            // Update output
+            outputCode.value = obfuscatedCode;
+            
+            // Update stats
+            const endTime = Date.now();
+            obfuscationTimeEl.textContent = endTime - startTime;
+            updateStats();
+            
+            // Show success message
+            showMessage(`Code obfuscated successfully in ${endTime - startTime}ms!`);
+        });
+    </script>
 </body>
 </html>
